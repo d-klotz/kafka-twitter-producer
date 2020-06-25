@@ -18,6 +18,26 @@ $ mvn install
 - Create a <a href="https://developer.twitter.com/en/apps">Twitter app</a> and generate the necessary secret keys.
 - Include the generated keys in the Producer class.
 
+# :collision: Run the Application
+
+In order to send tweets to the producer we have to start Zookeeper and Kafka.
+
+```shell
+# Start Zookeeper
+$ zookeeper-server-start.bat config\zookeeper.properties
+```
+
+```shell
+# Start Kafka
+$ kafka-server-start.bat config\server.properties
+```
+
+```shell
+# Create a topic
+$ kafka-topics.bat --zookeeper 127.0.01:2181 --create --topic <YOUT TOPIC HERE> -partitions 6 --replication-factor 1
+```
+
+Now you can start the application.
 
 <hr />
 
