@@ -6,6 +6,7 @@ This application streams real time tweets by any topic(s) using <a href="https:/
 
 - Java 8
 - Maven
+- Kafka
 
 # :closed_lock_with_key: Initital Instructions
 Clone this repository and install all dependencies.
