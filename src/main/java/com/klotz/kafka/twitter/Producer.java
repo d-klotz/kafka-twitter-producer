@@ -26,10 +26,10 @@ public class Producer {
     Logger logger = LoggerFactory.getLogger(Producer.class.getName());
 
     //Include your twitter secrets here. Read the README for more information.
-    private final String CONSUMER_KEY = "Your consumer key here";
-    private final String CONSUMER_SECRET = "Your consumer secret here";
-    private final String TOKEN = "Your twitter token here";
-    private final String SECRET = "Your twitter secret here";
+    private final String CONSUMER_KEY = "1WhxJ38bu8xzEadWh4Je7xggp";
+    private final String CONSUMER_SECRET = "3fZx6J3CZKgrjITS4vds5zhZoOdQwoboHHmNsKKEUKZzUpVkfI";
+    private final String TOKEN = "2909527319-f5sBuZzDtcEBadfGUIjzFFMubHSPS8jIFlEfuQv";
+    private final String SECRET = "q4CW669ejcsVAoWrSlXCFYcapvFSaIkKShekj8Zvws4uq";
 
     //You can set whatever terms you want to stream
     private final List<String> TRACKED_TERMS = Lists.newArrayList("kafka");
@@ -107,6 +107,21 @@ public class Producer {
         properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 
+        //safe properties
+        properties.setProperty(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");//avoids the consumption of the same request twice in case of network errors
+        properties.setProperty(ProducerConfig.ACKS_CONFIG, "all"); // all means that all replicas inside a partition have received the request
+        properties.setProperty(ProducerConfig.RETRIES_CONFIG, Integer.toString(Integer.MAX_VALUE)); // max number of retries in case of network error
+        properties.setProperty(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, "5"); // controls how many producer requests can be made to a broker in paralel
+
+
+        // high throughput properties (at the expense of a bit latency and CPU usage)
+        properties.setProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, "snappy");
+        properties.setProperty(ProducerConfig.LINGER_MS_CONFIG, "20"); //20ms of delay introduced to the producer
+        properties.setProperty(ProducerConfig.BATCH_SIZE_CONFIG, Integer.toString(32*1024)); //When there are too many request not send yet, kafka sends it via batch
+
+
+
+        //creates a kafka producer
         KafkaProducer<String, String> producer = new KafkaProducer<String, String>(properties);
         return producer;
     }
